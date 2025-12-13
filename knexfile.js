@@ -1,28 +1,16 @@
-// Update with your config settings.
-
-/**
- * @type { Object.<string, import("knex").Knex.Config> }
- */
+// knexfile.js
 module.exports = {
   development: {
-    client: 'postgresql',
+    client: 'sqlite3',
     connection: {
-      database: 'hr_dev',
-      user:     'user',
-      password: 'password',
-      host: 'db',
-      port: 5432
+      filename: './dev.sqlite3'
     },
-    pool: {
-      min: 2,
-      max: 10
-    },
+    useNullAsDefault: true,
     migrations: {
-      tableName: 'knex_migrations',
       directory: './src/db/migrations'
+    },
+    seeds: {
+      directory: './src/db/seeds'
     }
-  },
-
-  // staging: { ... },
-  // production: { ... }
+  }
 };

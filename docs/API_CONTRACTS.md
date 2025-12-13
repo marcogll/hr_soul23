@@ -1,149 +1,122 @@
-# Contratos de API y Modelos de Datos – HR Platform
+# API & Data Contracts
 
-Este documento define los **contratos formales** para la API REST y las estructuras de datos del sistema. Sirve como la **fuente única de verdad** para los agentes de Backend (Agente 2), Frontend (Agente 10) y Testing (Agente 11).
-
-Cualquier desviación de este contrato debe ser discutida y aprobada por el Agente 0 (Arquitectura).
+Este documento es la **única fuente de verdad** para los modelos de datos y las APIs del sistema. Todos los agentes (backend, frontend, testing) deben adherirse a estos contratos.
 
 ---
 
-## 1. Modelos de Datos Principales
+## Modelos de Datos (Tablas)
 
-### 1.1 Socia (`Employee`)
+### `socias`
 
-Representa a un miembro del personal.
+Almacena la información de las empleadas.
 
-```json
-{
-  "id": "s-a8b7c6d5",
-  "firstName": "Ana",
-  "lastName": "García",
-  "email": "ana.garcia@example.com",
-  "hireDate": "2023-01-15T10:00:00Z",
-  "branchId": "b-f2e1d0c9",
-  "isActive": true,
-  "createdAt": "2023-01-10T09:00:00Z",
-  "updatedAt": "2023-01-10T09:00:00Z"
-}
-```
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | `INTEGER` | PK, Auto-increment |
+| `nombre` | `VARCHAR(255)` | Nombre de la socia |
+| `apellido` | `VARCHAR(255)` | Apellido de la socia |
+| `fecha_ingreso`| `DATE` | Fecha de ingreso a la empresa |
+| `id_sucursal` | `INTEGER` | FK a `sucursales.id` |
+| `activo` | `BOOLEAN` | `true` si está activa, `false` si no |
+| `created_at` | `TIMESTAMP` | Fecha de creación del registro |
+| `updated_at` | `TIMESTAMP` | Fecha de última modificación |
 
-### 1.2 Vacación (`Vacation`)
+### `sucursales`
 
-Representa una solicitud de vacaciones.
+Almacena las diferentes sucursales o centros de trabajo.
 
-```json
-{
-  "id": "v-1a2b3c4d",
-  "employeeId": "s-a8b7c6d5",
-  "startDate": "2024-08-01",
-  "endDate": "2024-08-05",
-  "daysUsed": 5,
-  "status": "APPROVED", // PENDING, APPROVED, REJECTED
-  "cycleYear": 2024,
-  "requestedAt": "2024-06-10T11:00:00Z",
-  "approvedBy": "u-d9e8f7g6",
-  "approvedAt": "2024-06-11T15:30:00Z"
-}
-```
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | `INTEGER` | PK, Auto-increment |
+| `nombre` | `VARCHAR(255)` | Nombre de la sucursal |
+| `direccion` | `TEXT` | Dirección física de la sucursal |
+| `created_at` | `TIMESTAMP` | Fecha de creación del registro |
+| `updated_at` | `TIMESTAMP` | Fecha de última modificación |
 
-### 1.3 Permiso (`Permission`)
+### `vacaciones`
 
-Representa una solicitud de permiso (ausencia no vacacional).
+Registra las solicitudes y periodos de vacaciones.
 
-```json
-{
-  "id": "p-5e6f7g8h",
-  "employeeId": "s-a8b7c6d5",
-  "permissionDate": "2024-07-20",
-  "hours": 4, // 0 si es día completo
-  "reason": "Cita médica",
-  "status": "APPROVED", // PENDING, APPROVED, REJECTED
-  "requestedAt": "2024-07-18T09:00:00Z"
-}
-```
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | `INTEGER` | PK, Auto-increment |
+| `id_socia` | `INTEGER` | FK a `socias.id` |
+| `fecha_inicio` | `DATE` | Inicio del periodo vacacional |
+| `fecha_fin` | `DATE` | Fin del periodo vacacional |
+| `dias_tomados` | `INTEGER` | Cantidad de días hábiles |
+| `estado` | `VARCHAR(50)` | `solicitada`, `aprobada`, `rechazada` |
+| `ciclo_anual` | `VARCHAR(10)`| Ciclo al que corresponden, ej: "2023-2024" |
+| `created_at` | `TIMESTAMP` | Fecha de creación del registro |
+| `updated_at` | `TIMESTAMP` | Fecha de última modificación |
 
-### 1.4 Sucursal (`Branch`)
+### `permisos`
 
-Representa una ubicación física.
+Registra ausencias justificadas que no son vacaciones.
 
-```json
-{
-  "id": "b-f2e1d0c9",
-  "name": "Sucursal Centro",
-  "address": "Av. Principal 123, Ciudad"
-}
-```
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | `INTEGER` | PK, Auto-increment |
+| `id_socia` | `INTEGER` | FK a `socias.id` |
+| `fecha` | `DATE` | Fecha del permiso |
+| `horas` | `INTEGER` | `NULL` si es por día completo |
+| `dias` | `INTEGER` | `NULL` si es por horas |
+| `motivo` | `TEXT` | Razón del permiso |
+| `estado` | `VARCHAR(50)` | `solicitado`, `aprobado`, `rechazado` |
+| `created_at` | `TIMESTAMP` | Fecha de creación del registro |
+| `updated_at` | `TIMESTAMP` | Fecha de última modificación |
 
-### 1.5 Usuario (`User`)
+### `eventos`
 
-Representa un usuario del sistema con permisos.
+Log de eventos para webhooks.
 
-```json
-{
-  "id": "u-d9e8f7g6",
-  "username": "admin_juan",
-  "role": "ADMIN", // ROOT, ADMIN, USER
-  "permissions": [
-    "socias.read",
-    "vacaciones.approve",
-    "permisos.read"
-  ]
-}
-```
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | `INTEGER` | PK, Auto-increment |
+| `tipo_evento` | `VARCHAR(100)`| Ej: `vacaciones.solicitada` |
+| `payload` | `JSON` | Datos del evento |
+| `endpoint_url` | `VARCHAR(255)`| URL a la que se envió el webhook |
+| `estado_entrega`| `VARCHAR(50)` | `pendiente`, `enviado`, `fallido` |
+| `created_at` | `TIMESTAMP` | Fecha de creación del registro |
 
----
+### `configuraciones`
 
-## 2. Contratos de API (Endpoints)
+Almacena configuraciones clave-valor para el sistema.
 
-Todos los endpoints siguen el prefijo `/api/v1`.
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | `INTEGER` | PK, Auto-increment |
+| `clave` | `VARCHAR(100)`| Clave única de configuración |
+| `valor` | `TEXT` | Valor de la configuración |
+| `descripcion` | `TEXT` | Para qué sirve la configuración |
+| `created_at` | `TIMESTAMP` | Fecha de creación del registro |
+| `updated_at` | `TIMESTAMP` | Fecha de última modificación |
 
-### 2.1 Health Check
+### `usuarios`
 
-*   **Endpoint:** `GET /health`
-*   **Descripción:** Verifica el estado del servicio.
-*   **Respuesta Exitosa (200 OK):**
-    ```json
-    {
-      "status": "ok",
-      "timestamp": "2024-01-01T12:00:00Z"
-    }
-    ```
+Usuarios que pueden acceder al sistema.
 
-### 2.2 Gestión de Socias (`/employees`)
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | `INTEGER` | PK, Auto-increment |
+| `nombre` | `VARCHAR(255)` | Nombre del usuario |
+| `email` | `VARCHAR(255)`| Email único para login |
+| `password_hash`| `VARCHAR(255)`| Hash de la contraseña |
+| `rol` | `VARCHAR(50)` | `root`, `admin`, `user` |
+| `created_at` | `TIMESTAMP` | Fecha de creación del registro |
+| `updated_at` | `TIMESTAMP` | Fecha de última modificación |
 
-*   **`GET /employees`**
-    *   **Descripción:** Obtiene una lista de todas las socias.
-    *   **Respuesta:** `200 OK` con un array de objetos `Socia`.
+### `permisos_granulares`
 
-*   **`GET /employees/{id}`**
-    *   **Descripción:** Obtiene una socia por su ID.
-    *   **Respuesta:** `200 OK` con un objeto `Socia`.
+Define permisos específicos por usuario y recurso.
 
-*   **`POST /employees`**
-    *   **Descripción:** Crea una nueva socia.
-    *   **Request Body:** Objeto `Socia` (sin `id`, `createdAt`, `updatedAt`).
-    *   **Respuesta:** `201 Created` con el objeto `Socia` completo.
-
-*   **`PUT /employees/{id}`**
-    *   **Descripción:** Actualiza una socia existente.
-    *   **Request Body:** Objeto `Socia` con los campos a actualizar.
-    *   **Respuesta:** `200 OK` con el objeto `Socia` actualizado.
-
-### 2.3 Gestión de Vacaciones (`/vacations`)
-
-*   **`GET /employees/{employeeId}/vacations`**
-    *   **Descripción:** Obtiene el historial de vacaciones de una socia.
-    *   **Respuesta:** `200 OK` con un array de objetos `Vacacion`.
-
-*   **`POST /employees/{employeeId}/vacations`**
-    *   **Descripción:** Solicita nuevas vacaciones para una socia.
-    *   **Request Body:** `{ "startDate": "YYYY-MM-DD", "endDate": "YYYY-MM-DD" }`
-    *   **Respuesta:** `201 Created` con el objeto `Vacacion` creado.
-
-*   **`PUT /vacations/{vacationId}/status`**
-    *   **Descripción:** Aprueba o rechaza una solicitud de vacaciones (solo Admins).
-    *   **Request Body:** `{ "status": "APPROVED" }`
-    *   **Respuesta:** `200 OK` con el objeto `Vacacion` actualizado.
+| Columna | Tipo | Descripción |
+|---|---|---|
+| `id` | `INTEGER` | PK, Auto-increment |
+| `id_usuario` | `INTEGER` | FK a `usuarios.id` |
+| `recurso` | `VARCHAR(100)`| Ej: `socias`, `vacaciones` |
+| `accion` | `VARCHAR(50)` | `crear`, `leer`, `actualizar`, `eliminar` |
+| `permitido` | `BOOLEAN` | `true` si tiene el permiso |
+| `created_at` | `TIMESTAMP` | Fecha de creación del registro |
+| `updated_at` | `TIMESTAMP` | Fecha de última modificación |
 
 ---
-
-Este documento evolucionará. Los cambios serán comunicados y registrados por el Agente 0.
