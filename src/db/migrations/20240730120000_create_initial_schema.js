@@ -1,5 +1,28 @@
 exports.up = function(knex) {
   return knex.schema
+    .createTable('sucursales', function(table) {
+      table.increments('id').primary();
+      table.string('nombre', 255).notNullable();
+      table.text('direccion');
+      table.timestamps(true, true);
+    })
+    .createTable('usuarios', function(table) {
+      table.increments('id').primary();
+      table.string('nombre', 255).notNullable();
+      table.string('email', 255).unique().notNullable();
+      table.string('password_hash', 255).notNullable();
+      table.string('rol', 50).notNullable();
+      table.timestamps(true, true);
+    })
+    .createTable('socias', function(table) {
+      table.increments('id').primary();
+      table.string('nombre', 255).notNullable();
+      table.string('apellido', 255).notNullable();
+      table.date('fecha_ingreso').notNullable();
+      table.integer('id_sucursal').unsigned().references('id').inTable('sucursales');
+      table.boolean('activo').defaultTo(true);
+      table.timestamps(true, true);
+    })
     .createTable('vacaciones', function(table) {
       table.increments('id').primary();
       table.integer('id_socia').unsigned().references('id').inTable('socias');
@@ -35,14 +58,6 @@ exports.up = function(knex) {
       table.text('descripcion');
       table.timestamps(true, true);
     })
-    .createTable('usuarios', function(table) {
-      table.increments('id').primary();
-      table.string('nombre', 255).notNullable();
-      table.string('email', 255).unique().notNullable();
-      table.string('password_hash', 255).notNullable();
-      table.string('rol', 50).notNullable();
-      table.timestamps(true, true);
-    })
     .createTable('permisos_granulares', function(table) {
       table.increments('id').primary();
       table.integer('id_usuario').unsigned().references('id').inTable('usuarios');
@@ -55,10 +70,12 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return knex.schema
-    .dropTable('permisos_granulares')
-    .dropTable('usuarios')
-    .dropTable('configuraciones')
-    .dropTable('eventos')
-    .dropTable('permisos')
-    .dropTable('vacaciones');
+    .dropTableIfExists('permisos_granulares')
+    .dropTableIfExists('vacaciones')
+    .dropTableIfExists('permisos')
+    .dropTableIfExists('eventos')
+    .dropTableIfExists('configuraciones')
+    .dropTableIfExists('socias')
+    .dropTableIfExists('usuarios')
+    .dropTableIfExists('sucursales');
 };
