@@ -1,11 +1,16 @@
 const express = require('express');
+const sociasRouter = require('./routes/socias');
 
 const app = express();
 const PORT = process.env.PORT || 3011;
 
+app.use(express.json());
+
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
+
+app.use('/api/v1/socias', sociasRouter);
 
 // Centralized error handling
 app.use((err, req, res, next) => {
