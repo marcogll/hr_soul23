@@ -8,7 +8,7 @@ Su propósito es mantener un historial claro y auditable de las tareas y solucio
 
 ## Entradas de Bitácora
 
-### [Fecha] - Tarea/Decisión
+### 2024-07-29 - Creación del Sistema de Migraciones y Esquema Inicial
 
 *   **Contexto:** Se necesitaba una base de datos y un modelo de datos para poder continuar con el desarrollo de la aplicación.
 *   **Acción/Implementación:**
