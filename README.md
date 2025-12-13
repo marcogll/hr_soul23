@@ -254,7 +254,29 @@ No definen reglas nuevas.
 
 ---
 
-## 14. Nota final
+## 14. Flujo de Trabajo Basado en Agentes
+
+Este proyecto se desarrolla siguiendo una metodología de **agentes especializados**, donde cada agente (ya sea humano o IA) tiene un conjunto de responsabilidades bien definidas.
+
+### 14.1 Documentos Clave
+
+*   **`TASKS.md`**: Define el rol y las tareas de cada agente. Este es el punto de partida para cualquier contribución.
+*   **`docs/CONVENTIONS.md`**: Establece las reglas técnicas y de estilo que todos los agentes deben seguir. La consistencia es fundamental.
+*   **`docs/agents/`**: Contiene las bitácoras individuales de cada agente. Es **obligatorio** que cada agente documente sus decisiones, progreso y bloqueos en su archivo correspondiente.
+
+### 14.2 Proceso de Trabajo
+
+1.  **Consultar `TASKS.md`**: Identifica tu rol de agente y las tareas asignadas.
+2.  **Revisar `docs/CONVENTIONS.md`**: Asegúrate de que tu trabajo se alinee con las convenciones del proyecto.
+3.  **Ejecutar Tareas**: Implementa la funcionalidad o realiza la tarea asignada.
+4.  **Actualizar Bitácora**: Documenta lo que hiciste, por qué y cuál fue el resultado en tu archivo de bitácora en `docs/agents/`.
+5.  **Enviar Cambios**: Sigue las convenciones de nomenclatura de ramas y mensajes de commit.
+
+Este proceso estructurado garantiza la trazabilidad, facilita la colaboración y permite la orquestación eficiente del trabajo.
+
+---
+
+## 15. Nota final
 
 Este README es el **contrato técnico y funcional** del sistema.
 
