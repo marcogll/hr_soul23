@@ -1,78 +1,111 @@
-# TASKS – Roadmap de Implementación
+# TASKS – Roadmap por Agentes (HR Platform)
 
-Este documento define las **tareas técnicas y funcionales** necesarias para construir el sistema **HR Platform** descrito en el README principal.
+Este documento redefine las tareas del proyecto **HR Platform** dividiéndolas por **agentes especializados**.
 
-El objetivo es permitir ejecutar un **staging funcional completo**, con una interfaz limpia usando la paleta **Catppuccin Latte**, manteniendo consistencia visual y técnica.
+Cada agente tiene un **scope claro**, responsabilidades bien delimitadas y resultados verificables. Esto permite paralelizar trabajo humano o automatizado (IA) sin ambigüedad.
+
+La estética del staging debe ser **minimalista**, usando **Catppuccin Latte** y iconografía consistente.
 
 ---
 
-## 1. Setup inicial del proyecto
+## Agente 0 – Arquitectura & Orquestación
 
-### 1.1 Repositorio
+**Rol:** Guardián del sistema.
+
+Responsabilidades:
+
+* Validar que todas las decisiones respeten el README principal.
+* Definir límites entre agentes.
+* Aprobar cambios de arquitectura.
+
+Tareas:
+
+* Revisar README, TASKS y SECURITY.
+* Definir convenciones de naming.
+* Definir contratos entre módulos.
+
+### Bitácora del agente
+
+* Registro de decisiones arquitectónicas.
+* Cambios aprobados / rechazados.
+* Dependencias detectadas entre agentes.
+
+La bitácora es **visible para todos los agentes**.
+
+---
+
+## Agente 1 – Infraestructura & DevOps
+
+**Rol:** Hacer que el sistema exista y sea reproducible.
+
+Tareas:
 
 * Crear repositorio Git.
-* Definir rama `main` y `develop`.
-* Configurar `.gitignore` para Node.js y Docker.
+* Configurar ramas `main` / `develop`.
+* Crear `.gitignore`.
+* Crear Dockerfile Node.js.
+* Crear `docker-compose.yml`:
+
+  * Servicio API (Node.js, puerto 3011).
+  * Servicio DB.
+  * Red interna.
+* Crear `.env.example`.
+* Verificar arranque completo con un solo comando.
+
+Resultado esperado:
+
+* `docker-compose up` levanta el sistema.
+
+### Bitácora del agente
+
+* Cambios de infraestructura.
+* Versiones de imágenes.
+* Problemas de despliegue y soluciones.
+
+Visible para otros agentes.
 
 ---
 
-### 1.2 Base Node.js
+## Agente 2 – Backend Core (Node.js)
+
+**Rol:** Corazón lógico del sistema.
+
+Tareas:
 
 * Inicializar proyecto Node.js.
+* Configurar servidor HTTP en puerto 3011.
+* Crear endpoint `/health`.
+* Definir estructura de carpetas:
 
-* Definir estructura base:
+  * `modules`
+  * `routes`
+  * `services`
+  * `config`
+  * `webhooks`
+* Implementar manejo centralizado de errores.
 
-  * `src/`
-  * `src/server`
-  * `src/modules`
-  * `src/config`
-  * `src/routes`
-  * `src/services`
-  * `src/webhooks`
+Resultado esperado:
 
-* Configurar servidor HTTP en **puerto 3011**.
+* API estable, sin lógica de negocio aún.
 
-* Health check endpoint (`/health`).
+### Bitácora del agente
 
----
+* Decisiones técnicas de backend.
+* Cambios en estructura.
+* Endpoints creados o modificados.
 
-## 2. Docker y entorno
-
-### 2.1 Dockerfile
-
-* Crear Dockerfile para backend Node.js.
-* Uso de variables de entorno.
-* Build reproducible.
+Visible para agentes dependientes.
 
 ---
 
-### 2.2 Docker Compose
+## Agente 3 – Base de Datos & Modelado
 
-* Crear `docker-compose.yml` con:
+**Rol:** Fuente única de verdad.
 
-  * Servicio `api` (Node.js).
-  * Servicio `db`.
-* Red interna.
-* Volúmenes persistentes.
+Tareas:
 
----
-
-### 2.3 Variables de entorno
-
-* Crear `.env.example` con:
-
-  * Puerto
-  * DB host / user / password
-  * Google Sheets credentials
-  * Webhook base URLs
-
----
-
-## 3. Base de datos
-
-### 3.1 Modelo inicial
-
-* Definir tablas:
+* Diseñar modelo de datos.
+* Crear tablas:
 
   * socias
   * sucursales
@@ -80,172 +113,277 @@ El objetivo es permitir ejecutar un **staging funcional completo**, con una inte
   * permisos
   * eventos
   * configuraciones
+  * usuarios
+  * permisos_granulares
+* Definir claves y relaciones.
+* Implementar sistema de migraciones.
+* Crear seeds iniciales.
+
+Resultado esperado:
+
+* Base de datos consistente y versionada.
+
+### Bitácora del agente
+
+* Cambios de esquema.
+* Migraciones aplicadas.
+* Decisiones de modelado.
+
+Visible para backend y testing.
 
 ---
 
-### 3.2 Migraciones
+## Agente 4 – Importación Google Sheets
 
-* Sistema de migraciones.
-* Seeds básicos (configuración inicial).
+**Rol:** Convertir hojas en datos reales.
 
----
+Tareas:
 
-## 4. Importación desde Google Sheets
-
-### 4.1 Integración API
-
-* Conexión segura a Google Sheets API.
+* Integrar Google Sheets API.
 * Manejo de credenciales por entorno.
-
----
-
-### 4.2 Lógica de sincronización
-
 * Mapeo dinámico de columnas.
-* Identificación de registros.
 * Normalización de campos vacíos.
 * Prevención de duplicados.
+* Logs de sincronización.
+
+Resultado esperado:
+
+* Importación automática y confiable.
+
+### Bitácora del agente
+
+* Cambios en mapeos.
+* Errores detectados en datos.
+* Ajustes de normalización.
+
+Visible para agentes de datos.
 
 ---
 
-### 4.3 Logs
+## Agente 5 – Gestión de Socias
 
-* Registro de ejecuciones.
-* Errores y advertencias.
+**Rol:** Dominio principal del negocio.
 
----
+Tareas:
 
-## 5. Gestión de socias
-
-* Endpoint CRUD básico.
-* Validaciones de datos.
+* CRUD de socias.
+* Validaciones.
 * Asociación a sucursal.
-* Campo crítico: fecha de ingreso.
+* Manejo de fecha de ingreso.
+
+Resultado esperado:
+
+* Gestión completa del perfil de socias.
+
+### Bitácora del agente
+
+* Cambios en reglas de socias.
+* Validaciones agregadas.
+* Campos críticos ajustados.
+
+Visible para vacaciones y permisos.
 
 ---
 
-## 6. Vacaciones
+## Agente 6 – Vacaciones (Reglas de Negocio)
 
-### 6.1 Configuración legal
+**Rol:** Implementar la lógica legal.
 
-* Tabla configurable de días por antigüedad.
-* Editable sin cambios de código.
+Tareas:
 
----
-
-### 6.2 Cálculo de ciclos
-
-* Cálculo automático por fecha de ingreso.
-* Generación de saldo anual.
+* Configuración editable de tabla LFT.
+* Cálculo de antigüedad.
+* Generación de ciclos anuales.
+* Cálculo de saldo.
 * Caducidad automática.
+* Registro inmutable de solicitudes.
+
+Resultado esperado:
+
+* Vacaciones calculadas correctamente sin hardcodeo.
+
+### Bitácora del agente
+
+* Cambios en reglas legales.
+* Ajustes de cálculo.
+* Casos límite detectados.
+
+Visible para seguridad y testing.
 
 ---
 
-### 6.3 Solicitudes
+## Agente 7 – Permisos
 
-* Crear solicitud.
-* Validar saldo.
-* Registrar consumo.
-* Mantener historial inmutable.
+**Rol:** Controlar ausencias no vacacionales.
 
----
+Tareas:
 
-## 7. Permisos
-
-* Crear permisos por horas o días.
+* Registro de permisos por horas o días.
 * Motivos configurables.
-* Estados y trazabilidad.
+* Estados.
+* Historial permanente.
+
+Resultado esperado:
+
+* Permisos trazables y auditables.
+
+### Bitácora del agente
+
+* Cambios en tipos de permiso.
+* Reglas especiales.
+* Incidencias detectadas.
+
+Visible para asistencias futuras.
 
 ---
 
-## 8. Webhooks
+## Agente 8 – Webhooks & Eventos
 
-### 8.1 Infraestructura
+**Rol:** Comunicación externa.
 
-* Crear módulo de emisión de eventos.
-* Registro de eventos enviados.
+Tareas:
+
+* Crear módulo de eventos.
+* Definir payload estándar.
+* Implementar endpoints:
+
+  * `/webhook/vacaciones/{token}`
+  * `/webhook/permisos/{token}`
+* Generar tokens aleatorios (11 chars).
+* Registrar eventos enviados.
+
+Resultado esperado:
+
+* Eventos confiables y repetibles.
+
+### Bitácora del agente
+
+* Cambios de payload.
+* Eventos emitidos.
+* Fallos de entrega.
+
+Visible para observabilidad.
 
 ---
 
-### 8.2 Endpoints
+## Agente 9 – Seguridad & Autorización
 
-* `/webhook/vacaciones/{token}`
+**Rol:** Decidir quién puede hacer qué.
 
-* `/webhook/permisos/{token}`
+Tareas:
 
-* Generación de token aleatorio (11 chars).
+* Implementar roles: root, admin, user.
+* Implementar permisos granulares.
+* Middleware de autorización.
+* UI lógica para checkboxes de permisos.
+* Auditoría de cambios.
+
+Resultado esperado:
+
+* Ningún usuario puede exceder sus permisos.
+
+### Bitácora del agente
+
+* Cambios en reglas de acceso.
+* Incidentes de seguridad.
+* Ajustes de permisos.
+
+Visible para QA y root.
 
 ---
 
-## 9. Frontend (Staging)
+## Agente 10 – Frontend (Staging)
 
-### 9.1 Base UI
+**Rol:** Interfaz humana del sistema.
 
-* Frontend ligero (React / similar).
+Tareas:
+
+* Frontend ligero.
 * Consumo de API.
-* Sin lógica hardcodeada.
+* Búsqueda incremental.
+* Vistas de socias, vacaciones y permisos.
+* Estética:
+
+  * Catppuccin Latte.
+  * Minimalista.
+  * Iconos Catppuccin / Google.
+
+Resultado esperado:
+
+* UI clara, usable y consistente.
+
+### Bitácora del agente
+
+* Cambios de UI.
+* Decisiones de diseño.
+* Componentes creados.
+
+Visible para backend y QA.
 
 ---
 
-### 9.2 Paleta Catppuccin Latte
+## Agente 11 – Testing & QA
 
-Usar la paleta **Catppuccin Latte** como base visual:
+**Rol:** Romper el sistema antes que los usuarios.
 
-* Fondo principal claro.
-* Tipografía oscura suave.
-* Acentos pastel.
+Tareas:
 
-Componentes:
+* Tests de roles.
+* Tests de permisos granulares.
+* Tests de endpoints.
+* Tests de eventos y webhooks.
+* Validación end-to-end en staging.
 
-* Header
-* Sidebar
-* Cards
-* Inputs
-* Tablas
-* Estados (success / warning / error)
+Resultado esperado:
 
----
+* Confianza operativa.
 
-### 9.3 Búsqueda incremental
+### Bitácora del agente
 
-* Input único.
-* Resultados en tiempo real.
-* Selección despliega perfil completo.
+* Casos probados.
+* Bugs encontrados.
+* Bugs resueltos.
 
----
-
-## 10. Staging funcional
-
-* Deploy en entorno staging.
-* Acceso vía `hr.soul23.cloud`.
-* Validación end-to-end:
-
-  * Importación
-  * Búsqueda
-  * Vacaciones
-  * Permisos
-  * Webhooks
+Visible para todos.
 
 ---
 
-## 11. Observabilidad
+## Agente 12 – Observabilidad & Calidad
+
+**Rol:** Ver lo invisible.
+
+Tareas:
 
 * Logs estructurados.
 * Manejo de errores.
 * Métricas básicas.
 
+Resultado esperado:
+
+* Sistema observable.
+
+### Bitácora del agente
+
+* Métricas definidas.
+* Alertas configuradas.
+* Incidentes detectados.
+
+Visible para root y devops.
+
 ---
 
-## 12. Checklist de salida
+## Criterio de cierre de staging
 
-* Docker Compose operativo.
-* API estable.
-* UI funcional.
-* Reglas de negocio respetadas.
-* README actualizado.
+El staging se considera completo cuando:
+
+* Todos los agentes cumplen su resultado esperado.
+* El sistema corre vía Docker Compose.
+* Se accede por `hr.soul23.cloud`.
+* Las reglas del README se respetan.
 
 ---
 
-Este documento es el **plan ejecutable** del proyecto.
+Este documento define **cómo se piensa el trabajo**, no solo qué se hace.
 
-Si una tarea no aparece aquí, no forma parte del staging.
+Cada agente puede ser humano o IA.
+Si dos agentes se pisan, el diseño está mal.
