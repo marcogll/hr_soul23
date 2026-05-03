@@ -7,18 +7,15 @@
 </picture>
 </a>
 
+</div>
+
 # Hr Soul23
 
-Node.js application for web services 🌐
+Sistema de recursos humanos y gestión de personal 👥
 
 <p>
-    <img src="https://img.shields.io/badge/Docker-111111?style=flat-square&logo=docker&logoColor=white" alt="Docker">
-  <img src="https://img.shields.io/badge/website-111111?style=flat-square&logo=github&logoColor=white" alt="Website">
-  <img src="https://img.shields.io/badge/Node.js-111111?style=flat-square&logo=node.js&logoColor=white" alt="Node.js">
-
+  <img src="https://img.shields.io/badge/español-111111?style=flat-square&logo=googletranslate&logoColor=white" alt="Español">
 </p>
-
-</div>
 
 ---
 
@@ -341,4 +338,5 @@ Este proceso estructurado garantiza la trazabilidad, facilita la colaboración y
 Este README es el **contrato técnico y funcional** del sistema.
 
 Si una implementación contradice este documento, la implementación está mal.
+
 
