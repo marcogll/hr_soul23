@@ -1,11 +1,22 @@
-# Sistema de Gestión de Socias – HR Platform
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/marcogll/mg_data_storage/b1b4035928e086f9394baf9988f80f4b0075ae20/soul23/logo/s23_logo_wh.png">
+    <img src="https://raw.githubusercontent.com/marcogll/mg_data_storage/b1b4035928e086f9394baf9988f80f4b0075ae20/soul23/logo/s23_logo_blk.png" alt="Soul23" width="110">
+  </picture>
+</p>
 
-**FQDN:** `hr.soul23.cloud`
-**Puerto:** `3011`
-**Stack principal:** Node.js
-**Despliegue:** Docker Compose
+<h1 align="center">hr_soul23.git</h1>
 
----
+<p align="center">
+  FQDN: hr.soul23.cloud
+</p>
+
+<p align="center">
+  [![Docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://github.com/marcogll)
+  [![Node.js](https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://github.com/marcogll)
+  [![PostgreSQL](https://img.shields.io/badge/postgresql-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://github.com/marcogll)
+</p>
+
 
 ## 1. Descripción general
 
@@ -93,6 +104,12 @@ Características:
 * Red interna privada.
 * Variables de entorno definidas en `.env`.
 
+Pasos rápidos (local):
+
+1. Copia `.env.example` a `.env` y ajusta credenciales si es necesario.
+2. Ejecuta `docker-compose up --build`.
+3. El contenedor de API aplica migraciones y seeds automáticamente antes de arrancar.
+
 El servicio Node.js expone:
 
 * **Puerto interno:** 3011
@@ -138,6 +155,16 @@ Cada socia incluye:
 * Asociación a sucursal.
 
 La fecha de ingreso gobierna la lógica de vacaciones.
+
+### 7.1 Endpoints de socias
+
+* `GET /api/v1/socias`: lista todas las socias (filtrable por `active=true|false` y por `q` para coincidencias parciales).
+* `GET /api/v1/socias/{id}`: devuelve una socia por su identificador.
+* `POST /api/v1/socias`: crea una socia nueva. El cuerpo debe incluir `nombre`, `apellido`, `fechaIngreso` (YYYY-MM-DD) e `idSucursal`.
+* `PUT /api/v1/socias/{id}`: actualiza campos individuales; acepta las mismas claves que el POST y también `activo`.
+* `DELETE /api/v1/socias/{id}`: elimina el registro de la socia confirmada.
+
+Las respuestas exponen `fechaIngreso`, `idSucursal`, `sucursal` (nombre de la sucursal asociada) y los timestamps `createdAt`/`updatedAt`.
 
 ---
 
@@ -189,6 +216,17 @@ Cada solicitud guarda:
 
 El historial es inmutable.
 
+### 8.5 API de vacaciones
+
+La lógica de vacaciones se alimenta desde la configuración `dias_vacaciones_por_anio` y genera ciclos anuales cerrados desde la fecha de ingreso. La API expone:
+
+* `GET /api/v1/vacaciones`: lista las solicitudes enviadas; `idSocia`, `estado` y `ciclo` se pueden usar como filtros.
+* `GET /api/v1/vacaciones/{id}`: devuelve el detalle de una solicitud (incluye datos de la socia y la sucursal).
+* `POST /api/v1/vacaciones`: crea una solicitud (cuerpo: `idSocia`, `fechaInicio`, `fechaFin`). El sistema valida que las fechas estén en el ciclo correcto, que la socia esté activa y que no supere los días disponibles.
+* `GET /api/v1/vacaciones/ciclos/{idSocia}`: agrega el historial de ciclos (`label`, `diasGenerados`, `diasConsumidos`, `diasDisponibles`, `activo` y `caducado`). Se puede pasar `asOf=YYYY-MM-DD` para calcular los ciclos hasta una fecha distinta al día de hoy.
+
+Las respuestas ya calculan automáticamente `cicloAnual`, `diasTomados`, `estado` (por defecto `solicitada`) y metadata de disponibilidad para cada período, lo que respalda el principio de caducidad automática.
+
 ---
 
 ## 9. Permisos
@@ -197,6 +235,13 @@ El historial es inmutable.
 * Motivo configurable.
 * Historial permanente.
 * Relación directa con asistencias futuras.
+
+### API de permisos
+
+* `GET /api/v1/permisos`: lista permisos (filtros: `idSocia`, `estado`, `fecha`).
+* `GET /api/v1/permisos/{id}`: detalle incluyendo socia y sucursal.
+* `POST /api/v1/permisos`: crea un permiso (horas **o** días, no ambos).
+* `PUT /api/v1/permisos/{id}/estado`: cambia estado a `solicitado`, `aprobado` o `rechazado`.
 
 ---
 
@@ -223,6 +268,12 @@ Existen únicamente dos endpoints:
 * Forma parte de la URL.
 * Identifica el destino.
 * No es autenticación.
+
+### 10.4 Implementación actual
+
+* Los tokens y URLs se gestionan en `configuraciones` (`webhook_token_*`, `webhook_url_*`); si falta token se genera en caliente.
+* Cada evento se registra en la tabla `eventos` con estado `pendiente` y payload serializado.
+* API interna de monitoreo: `GET /api/v1/eventos` permite filtrar por `tipo` o `estado_entrega` para auditar el backlog.
 
 ---
 
