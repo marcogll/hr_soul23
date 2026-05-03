@@ -14,7 +14,9 @@
 Sistema de recursos humanos y gestión de personal 👥
 
 <p>
-  <img src="https://img.shields.io/badge/español-111111?style=flat-square&logo=googletranslate&logoColor=white" alt="Español">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/Español-111111?style=flat-square&logo=googletranslate&logoColor=white" alt="Español">
+  <img src="https://img.shields.io/badge/website-111111?style=flat-square&logo=github&logoColor=white" alt="Website">
 </p>
 
 ---
@@ -338,5 +340,6 @@ Este proceso estructurado garantiza la trazabilidad, facilita la colaboración y
 Este README es el **contrato técnico y funcional** del sistema.
 
 Si una implementación contradice este documento, la implementación está mal.
+
 
 
