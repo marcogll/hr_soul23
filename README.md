@@ -1,21 +1,24 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://soul23.mx/logo/s23_logo_wh.png">
-    <img src="https://soul23.mx/logo/s23_logo_blk.png" alt="Soul23" width="110">
-  </picture>
+<div align="center">
+
+<img src="https://soul23.mx/logo/soul23_logo.svg" width="90" alt="Soul23">
+
+# Hr Soul23
+
+Node.js application for web services 🌐
+
+<p>
+    <img src="https://img.shields.io/badge/Docker-111111?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/Node.js-111111?style=flat-square&logo=node.js&logoColor=white" alt="Node.js">
+
 </p>
+
+</div>
+
+---
 
 <h1 align="center">hr_soul23.git</h1>
 
-<p align="center">
-  FQDN: hr.soul23.cloud
-</p>
 
-<p align="center">
-  [![Docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://github.com/marcogll)
-  [![Node.js](https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://github.com/marcogll)
-  [![PostgreSQL](https://img.shields.io/badge/postgresql-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://github.com/marcogll)
-</p>
 
 
 ## 1. Descripción general
@@ -332,3 +335,4 @@ Este proceso estructurado garantiza la trazabilidad, facilita la colaboración y
 Este README es el **contrato técnico y funcional** del sistema.
 
 Si una implementación contradice este documento, la implementación está mal.
+
