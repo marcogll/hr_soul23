@@ -1,23 +1,39 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/marcogll/mg_data_storage/refs/heads/main/soul23/logo/soul23_logo.svg" width="110" alt="Soul23">
+  <a href="https://soul23.mx">
+    <picture>
+      <source
+        media="(prefers-color-scheme: dark)"
+        srcset="https://raw.githubusercontent.com/marcogll/mg_data_storage/refs/heads/main/soul23/logo/soul23_logo_wh.png">
+      <source
+        media="(prefers-color-scheme: light)"
+        srcset="https://raw.githubusercontent.com/marcogll/mg_data_storage/refs/heads/main/soul23/logo/soul23_logo_blk.png">
+      <img
+        src="https://raw.githubusercontent.com/marcogll/mg_data_storage/refs/heads/main/soul23/logo/soul23_logo_blk.png"
+        width="110"
+        alt="Soul:23">
+    </picture>
+  </a>
 </p>
 
-<h1 align="center">Hr Soul23</h1>
+<h1 align="center">HR Soul23</h1>
 
 <p align="center">
-  Sistema de recursos humanos y personal 👥
+  Sistema de recursos humanos y personal para Soul 23 — socias, vacaciones, permisos y webhooks.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Docker-3a3a3a?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/Python-3a3a3a?style=flat-square&logo=python&logoColor=white">
+  <img src="https://img.shields.io/badge/FastAPI-3a3a3a?style=flat-square&logo=fastapi&logoColor=white">
+  <img src="https://img.shields.io/badge/Docker-3a3a3a?style=flat-square&logo=docker&logoColor=white">
 </p>
 
-  Sistema de recursos humanos y personal 👥
-</p>
+---
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Docker-3a3a3a?style=flat-square&logo=docker&logoColor=white" alt="Docker">
-</p>
+## Description
+
+Plataforma profesional de gestión de recursos humanos (HR) enfocada en la administración de socias y personal operativo, desplegada como servicio web desacoplado en contenedores Docker y accesible vía `hr.soul23.cloud`.
+
+Centraliza información crítica del personal, automatiza procesos administrativos (vacaciones conforme a la Ley Federal del Trabajo, permisos), importa datos desde Google Sheets y emite eventos hacia sistemas externos mediante webhooks, preparada para integrarse con agentes de IA.
 
 ## 1. Descripción general
 
